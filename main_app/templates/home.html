@@ -1,4 +1,31 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %} 
 {% block content %}
-<h1>Plants Home</h1>
+<div class="home__playlists">
+    {% for garden in gardens %}
+
+        <div class="playlist mb-5">
+            <h3 class="title is-3 has-text-success">{{garden.name}}</h3>
+            <hr />
+            {% for plant in garden.plants.all %}
+                <div class="plant">
+                    <span>{{forloop.counter}}</span>
+                    <span><b>{{plant.name}}</b></span>
+
+                    <span>
+                        <a href="{% url 'garden_plant_assoc' garden.pk plant.pk %}?assoc=remove"
+                           class="button is-danger is-outlined">
+                            <span class="icon is-small">
+                                <i class="fas fa-times"></i>
+                            </span>
+                        </a>
+                    </span>
+
+                </div>
+
+            {% endfor %}
+        </div>
+    {% empty %} 
+        <div class="playlist mb-5">"There are no plants in this garden"</div>
+    {% endfor %}
+</div>
 {% endblock %}

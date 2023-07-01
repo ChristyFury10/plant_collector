@@ -10,3 +10,10 @@ class Plant(models.Model):
 
     def __str__(self):
         return self.name
+    
+class Garden(models.Model):
+    name = models.CharField(max_length=100)
+    plants = models.ManyToManyField(Plant)
+
+    def __str__(self):
+        return self.name

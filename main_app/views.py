@@ -1,9 +1,9 @@
 from typing import Any, Dict
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views import View
 from django.http import HttpResponse
 from django.views.generic.base import TemplateView
-from .models import Plant
+from .models import Plant, Garden
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import DetailView
 from django.urls import reverse
@@ -11,6 +11,10 @@ from django.urls import reverse
 
 class Home(TemplateView):
     template_name = "home.html"
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["gardens"] = Garden.objects.all()
+        return context
     
 
 class About(TemplateView):
@@ -44,6 +48,10 @@ class PlantList(TemplateView):
         else:
             context["plants"] = Plant.objects.all()
             context["header"] = "All Plants"
+
+        context["gardens"] = Garden.objects.all()
+        return context
+    
         return context
     
 class PlantCreate(CreateView):
@@ -58,6 +66,11 @@ class PlantDetail(DetailView):
     model = Plant
     template_name = "plant_detail.html"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["gardens"] = Garden.objects.all()
+        return context
+
 class PlantUpdate(UpdateView):
     model = Plant
     fields = ['name', 'image', 'habitat', 'bio']
@@ -69,3 +82,12 @@ class PlantDelete(DeleteView):
     model = Plant
     template_name = "plant_delete_confirmation.html"
     success_url = "/plants/"
+
+class GardenPlantAssoc(View):
+    def get(self, request, pk, plant_pk):
+        assoc = request.GET.get("assoc")
+        if assoc == "remove":
+            Garden.objects.get(pk=pk).plants.remove(plant_pk)
+        if assoc == "add":
+            Garden.objects.get(pk=pk).plants.add(plant_pk)
+        return redirect("home")
