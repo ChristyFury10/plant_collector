@@ -91,3 +91,9 @@ class GardenPlantAssoc(View):
         if assoc == "add":
             Garden.objects.get(pk=pk).plants.add(plant_pk)
         return redirect("home")
+    
+class GardenCreate(CreateView):
+    model = Garden
+    fields = ['name']
+    template_name = "garden_create.html"
+    success_url = "/plants/"

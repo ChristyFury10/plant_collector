@@ -10,6 +10,8 @@ urlpatterns = [
     path('plants/<int:pk>/update', views.PlantUpdate.as_view(), name="plant_update"),
     path('plants/<int:pk>/delete', views.PlantDelete.as_view(), name="plant_delete_confirmation"),
     path('gardens/<int:pk>/plant/<int:plant_pk>/', views.GardenPlantAssoc.as_view(), name="garden_plant_assoc"),
+    path('plants/gardens/new/', views.GardenCreate.as_view(), name="garden_create"),
+
 
 
 ]
